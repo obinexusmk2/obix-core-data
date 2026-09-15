@@ -1,17 +1,17 @@
-import { applyAction, replayTrace } from "obix-ir";
-export function toData(artifact) {
-    return artifact;
+import { reduce, replay as fold, renderHtml, validate as validateState } from "./dop.js";
+export function toData(component) {
+    return component;
 }
-export function dataApply(artifact, state, actionName, payload, props = artifact.props) {
-    return applyAction(artifact, state, actionName, payload, props);
+export function dataApply(component, state, actionName, payload, props) {
+    return reduce(component, state, actionName, payload, props);
 }
-export function dataReplay(artifact, trace, from = artifact.initialState, props = artifact.props) {
-    return replayTrace(artifact, trace, from, props);
+export function dataReplay(component, trace, from, props) {
+    return fold(component, trace, from, props);
 }
-export function dataRender(artifact, state, props = artifact.props) {
-    return artifact.render ? artifact.render(state, props) : "";
+export function dataRender(component, state, props) {
+    return renderHtml(component, state, props);
 }
-export function dataValidate(artifact, state, props = artifact.props) {
-    return artifact.validate ? artifact.validate(state, props) : { valid: true, violations: [] };
+export function dataValidate(component, state, props) {
+    return validateState(component, state, props);
 }
 //# sourceMappingURL=index.js.map

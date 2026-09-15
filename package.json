@@ -1,8 +1,9 @@
 {
   "name": "@obinexusltd/obix-core-data",
-  "version": "0.2.1",
-  "description": "OBIX Data projection — identity over the DOP artifact. The caller explicitly owns state, payload and props. Depends on obix-spec and obix-ir.",
+  "version": "0.3.0",
+  "description": "OBIX Data projection — identity over the DOP artifact. The caller explicitly owns state, payload and props. Zero dependencies.",
   "license": "MIT",
+  "author": "OBINexus <okpalan@protonmail.com>",
   "type": "module",
   "private": false,
   "sideEffects": false,
@@ -13,15 +14,22 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./src": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md", "LICENSE"],
-  "scripts": {
-    "build": "tsc -p tsconfig.json"
+  "files": [
+    "dist",
+    "src",
+    "test",
+    "docs",
+    "README.md"
+  ],
+  "directories": {
+    "doc": "docs"
   },
-  "dependencies": {
-    "obix-spec": "0.2.1",
-    "obix-ir": "0.2.1"
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test \"test/*.test.mjs\""
   },
   "publishConfig": {
     "access": "public"
@@ -31,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/obinexusmk2/obix-monorepo-2026.git",
-    "directory": "packages/obix-adapter-data"
+    "url": "git+https://github.com/obinexusmk2/obix-core-data.git",
+    "directory": "core/obix-core-data"
   }
 }

@@ -1,61 +1,67 @@
 /**
- * obix-adapter-data
+ * @obinexusltd/obix-core-data
  *
  * The Data projection: the identity over a DOP artifact. No hidden props, no
- * instance, no lifecycle. The caller threads `state`, `payload` and `props`
- * itself. All transitions route through obix-ir.applyAction — the same business
- * action every other adapter calls.
+ * instance, no lifecycle. The caller threads `component`, `state`, `payload`
+ * and `props` itself, every call. All transitions route through the vendored
+ * `reduce` (./dop.js) — the same single action path the other adapter
+ * projections (func / oop / reactive / ssr) use.
+ *
+ * Zero dependencies.
  */
-import { applyAction, replayTrace } from "obix-ir";
-import type {
-  DOPArtifact,
-  State,
-  Props,
-  Payload,
-  ActionTrace,
-  ValidationResult,
-} from "obix-spec";
+import { reduce, replay as fold, renderHtml, validate as validateState } from "./dop.js";
+import type { ActionTrace, DOPComponent, ValidationResult } from "./types.js";
 
-/** Data projection === the artifact itself. */
-export function toData<S extends object = State, P extends object = Props>(
-  artifact: DOPArtifact<S, P>,
-): DOPArtifact<S, P> {
-  return artifact;
+export type {
+  ActionContext,
+  ActionFn,
+  ActionTrace,
+  DOPComponent,
+  EffectDescriptor,
+  RenderView,
+  ValidationResult,
+} from "./types.js";
+
+/** Data projection === the artifact itself. Pure identity, `toData(c) === c` always. */
+export function toData<S extends object, P extends object>(
+  component: DOPComponent<S, P>,
+): DOPComponent<S, P> {
+  return component;
 }
 
 /** Apply one action. Caller owns everything. */
-export function dataApply<S extends object = State, P extends object = Props>(
-  artifact: DOPArtifact<S, P>,
+export function dataApply<S extends object, P extends object>(
+  component: DOPComponent<S, P>,
   state: S,
   actionName: string,
-  payload: Payload,
-  props: P = artifact.props,
+  payload?: unknown,
+  props?: P,
 ): S {
-  return applyAction(artifact, state, actionName, payload, props);
+  return reduce(component, state, actionName, payload, props);
 }
 
 /** Fold a trace over the Data projection. */
-export function dataReplay<S extends object = State, P extends object = Props>(
-  artifact: DOPArtifact<S, P>,
+export function dataReplay<S extends object, P extends object>(
+  component: DOPComponent<S, P>,
   trace: ActionTrace,
-  from: S = artifact.initialState,
-  props: P = artifact.props,
+  from?: S,
+  props?: P,
 ): S {
-  return replayTrace(artifact, trace, from, props);
+  return fold(component, trace, from, props);
 }
 
 export function dataRender<S extends object, P extends object>(
-  artifact: DOPArtifact<S, P>,
+  component: DOPComponent<S, P>,
   state: S,
-  props: P = artifact.props,
+  props?: P,
 ): string {
-  return artifact.render ? artifact.render(state, props) : "";
+  return renderHtml(component, state, props);
 }
 
 export function dataValidate<S extends object, P extends object>(
-  artifact: DOPArtifact<S, P>,
+  component: DOPComponent<S, P>,
   state: S,
-  props: P = artifact.props,
+  props?: P,
 ): ValidationResult {
-  return artifact.validate ? artifact.validate(state, props) : { valid: true, violations: [] };
+  return validateState(component, state, props);
 }

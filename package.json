@@ -1,5 +1,5 @@
 {
-  "name": "obix-adapter-data",
+  "name": "@obinexusltd/obix-core-data",
   "version": "0.2.1",
   "description": "OBIX Data projection — identity over the DOP artifact. The caller explicitly owns state, payload and props. Depends on obix-spec and obix-ir.",
   "license": "MIT",

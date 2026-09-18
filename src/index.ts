@@ -1,67 +1,33 @@
 /**
  * @obinexusltd/obix-core-data
  *
- * The Data projection: the identity over a DOP artifact. No hidden props, no
- * instance, no lifecycle. The caller threads `component`, `state`, `payload`
- * and `props` itself, every call. All transitions route through the vendored
- * `reduce` (./dop.js) — the same single action path the other adapter
- * projections (func / oop / reactive / ssr) use.
+ * The canonical, paradigm-neutral OBIX data substrate: definitions,
+ * isolated instances, typed actions, snapshots and a serializable-data
+ * boundary. Sits above raw JavaScript objects and below any rendering,
+ * component or runtime adapter (functional, OOP, reactive, JSX, ...).
  *
- * Zero dependencies.
+ * Zero dependencies. No DOM, no browser/Node-only APIs, no rendering.
  */
-import { reduce, replay as fold, renderHtml, validate as validateState } from "./dop.js";
-import type { ActionTrace, DOPComponent, ValidationResult } from "./types.js";
+export {
+  cloneData,
+  createDataInstance,
+  defineData,
+  deserializeData,
+  isDataDefinition,
+  isDataInstance,
+  serializeData,
+  snapshotData,
+} from "./data.js";
 
 export type {
-  ActionContext,
-  ActionFn,
-  ActionTrace,
-  DOPComponent,
-  EffectDescriptor,
-  RenderView,
-  ValidationResult,
+  OBIXAction,
+  OBIXActionArgs,
+  OBIXActionMap,
+  OBIXBoundActions,
+  OBIXDataContext,
+  OBIXDataDefinition,
+  OBIXDataInstance,
+  OBIXSnapshot,
 } from "./types.js";
 
-/** Data projection === the artifact itself. Pure identity, `toData(c) === c` always. */
-export function toData<S extends object, P extends object>(
-  component: DOPComponent<S, P>,
-): DOPComponent<S, P> {
-  return component;
-}
-
-/** Apply one action. Caller owns everything. */
-export function dataApply<S extends object, P extends object>(
-  component: DOPComponent<S, P>,
-  state: S,
-  actionName: string,
-  payload?: unknown,
-  props?: P,
-): S {
-  return reduce(component, state, actionName, payload, props);
-}
-
-/** Fold a trace over the Data projection. */
-export function dataReplay<S extends object, P extends object>(
-  component: DOPComponent<S, P>,
-  trace: ActionTrace,
-  from?: S,
-  props?: P,
-): S {
-  return fold(component, trace, from, props);
-}
-
-export function dataRender<S extends object, P extends object>(
-  component: DOPComponent<S, P>,
-  state: S,
-  props?: P,
-): string {
-  return renderHtml(component, state, props);
-}
-
-export function dataValidate<S extends object, P extends object>(
-  component: DOPComponent<S, P>,
-  state: S,
-  props?: P,
-): ValidationResult {
-  return validateState(component, state, props);
-}
+export { OBIXSerializationError } from "./types.js";

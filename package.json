@@ -1,7 +1,7 @@
 {
   "name": "@obinexusltd/obix-core-data",
-  "version": "0.3.0",
-  "description": "OBIX Data projection — identity over the DOP artifact. The caller explicitly owns state, payload and props. Zero dependencies.",
+  "version": "0.4.0",
+  "description": "OBIX canonical data substrate — definitions, isolated instances, typed actions, snapshots and a serializable-data boundary. Paradigm-neutral: functional/OOP/reactive/JSX adapters build on top of it. Zero dependencies.",
   "license": "MIT",
   "author": "OBINexus <okpalan@protonmail.com>",
   "type": "module",
